@@ -12,7 +12,7 @@ window.addEventListener('load', function(){
     ctx.canvas.height = window.innerHeight;
     var width = ctx.canvas.width;
     var height = ctx.canvas.height;
-	var numBoids = 100;				//number of boids objects
+	var numBoids = 300;				//number of boids objects
 	var maxSpeed = 3;				//limiting the speed
 	var maxSteeringForce = 0.03;
 	var desiredSeparation = 50;		//distance to check for other boids to separate from
@@ -29,6 +29,8 @@ window.addEventListener('load', function(){
 	
 	//create a boid object and fill the flock array
 	function init(){
+        ctx.fillStyle = "rgb(0, 0, 0)";
+        ctx.fillRect(0,0,width, height);
 		for (var i = 0; i < numBoids;i++){
 			flock[i] = Object.create(boid);
 			flock[i].initBoid();
@@ -39,7 +41,7 @@ window.addEventListener('load', function(){
 	//update every frame
 	function update(){
 		ctx.save();	//ctx.save() and ctx.restore() reset the transformations and rotations used to move objects on screen
-		ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+		ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
         ctx.fillRect(0,0,width, height);		//reset background color every frame
 		
 		//for every boid:		
@@ -50,7 +52,7 @@ window.addEventListener('load', function(){
 			//draw the boid with it's transformation and rotation
 			ctx.translate(flock[i].position.x,flock[i].position.y);
 			ctx.rotate(flock[i].velocity.heading());
-			circle(radius, 'green');
+			circle(radius, flock[i].color);
 			//ctx.fillRect(0,0,radius+5,radius);
 			ctx.restore();
 		}
@@ -193,6 +195,7 @@ window.addEventListener('load', function(){
 			this.position = Vector(getRndFloat(0.0, width), getRndFloat(0.0, height));
 			this.velocity = Vector(0.0,0.0);
 			this.acceleration = Vector(0.0,0.0);
+            this.color = "rgb(" + getRndInteger(0,255) +"," + getRndInteger(0,255) +","+getRndInteger(0,255)+")";
 		},
 		//update boid
 		updateBoid: function(){
