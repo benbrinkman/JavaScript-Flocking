@@ -324,7 +324,7 @@ window.addEventListener('load', function(){
 	setInterval(update, 30);
 });
 
-
+//for images
 /*
 function Test(){
 	"use strict";
@@ -332,65 +332,5 @@ function Test(){
 	ballImg.src = 'assets/ball.png';
 	ctx.drawImage(ballImg, 0, 0);
 }*/
-
-/*
-	var vector = {
-		init: function(x, y){
-		this.x = x;
-		this.y = y;	
-		},
-		add: function(_vector){
-			this.x+=_vector.x;
-			this.y+=_vector.y;
-			return this;
-		},
-		subtract: function(_vector){
-			this.x-=_vector.x;
-			this.y-=_vector.y;
-		},
-		mult: function(_vector){
-			this.x*=_vector;
-			this.y*=_vector;
-			return this;
-		},
-		div: function(_vector){
-			if(typeof "_vector" === "object"){
-				this.x/=_vector.x;
-				this.y/=_vector.y;		
-				return this;
-			}
-			else{
-				this.x/=_vector;
-				this.y/=_vector;
-				return this;
-			}
-		},
-		normalize: function(){
-			var u = Vector(0,0);
-			var v = this;
-			var m = this.mag();
-			if(m!==0)
-			{
-				u = v.div(m);
-			}
-			return u;
-		},
-		mag: function(){
-			return Math.pow((this.x*this.x + this.y*this.y), 0.5);	
-		},
-		limit: function(maxVal){
-			if(Math.pow(this.mag, 2) > Math.pow(maxVal, 2)){
-				this.normalize();
-				this.mult(maxVal);
-				return this;	
-			}
-		},
-		heading: function(){
-			var angle = Math.atan2(this.y, this.x);
-    		return angle;	
-		}
-	};*/
-
-
 
 
