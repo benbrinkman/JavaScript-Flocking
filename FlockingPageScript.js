@@ -12,7 +12,7 @@ window.addEventListener('load', function(){
 	var height = ctx.canvas.height;
 	
 	//number of boids objects
-	var numBoids = 50;
+	var numBoids = 30;
 	
 	//limiting the speed
 	var maxSpeed = 3;
@@ -30,7 +30,7 @@ window.addEventListener('load', function(){
 	//weight of the three flocking influences
 	var seperationWeight =1;
 	var alignmentWeight =1;
-	var cohesionWeight =0.1;
+	var cohesionWeight =1;
 	
 	//radius of boids
 	var radius=10;
@@ -85,12 +85,14 @@ window.addEventListener('load', function(){
 		add: function(_vector){
 			this.x+=_vector.x;
 			this.y+=_vector.y;
-			return this;
+			//return this;
 		},
 		//for subtracting two function -- having issues with this one, using subtract function outside vector instead
 		subtract: function(_vector){
-			this.x-=_vector.x;
-			this.y-=_vector.y;
+			var subbed = Vector(this.x,this.y);
+			subbed.x-=_vector.x;
+			subbed.y-=_vector.y;
+			return subbed;
 		},
 		//multiplying by either a scalar or a vector
 		mult: function(_vector){
@@ -241,7 +243,8 @@ window.addEventListener('load', function(){
 				if (d < desiredSeparation && d > 0)
 				{
 					var delta = Vector();
-					delta = subtract(this.position, boids[i].position);
+					delta = this.position.subtract(boids[i].position);
+					//delta = subtract(this.position, boids[i].position);
 					delta.normalize();
 					delta.div(d);
 					steer.add(delta);
