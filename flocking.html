@@ -2,10 +2,15 @@
 <html>
 <head>
 	<title>Flocking</title>
+    <link rel="stylesheet" type="text/css" href="flockingStyle.css">
     <script type="text/javascript" src="FlockingPageScript.js"></script>
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
 </head>
 <body>
-    <canvas id="Encase" width="1080" height="1080" style="border:1px solid #000000;"></canvas>
+    <canvas id="Draw"></canvas>
+    <div class="slidecontainer">
+        <p>Search Distance:</p>
+        <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+    </div>
 </body>
 </html>

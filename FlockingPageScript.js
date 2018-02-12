@@ -7,36 +7,25 @@ All code is written by Ben Brinkman
 //on page load begin
 window.addEventListener('load', function(){
 	"use strict";
-	var ctx = document.getElementById("Encase").getContext('2d');
-	var width = ctx.canvas.width;
-	var height = ctx.canvas.height;
-	
-	//number of boids objects
-	var numBoids = 30;
-	
-	//limiting the speed
-	var maxSpeed = 3;
+	var ctx = document.getElementById("Draw").getContext('2d');
+    ctx.canvas.width = window.innerWidth;
+    ctx.canvas.height = window.innerHeight;
+    var width = ctx.canvas.width;
+    var height = ctx.canvas.height;
+	var numBoids = 100;				//number of boids objects
+	var maxSpeed = 3;				//limiting the speed
 	var maxSteeringForce = 0.03;
-	 
-	//distance to check for other boids to separate from
-	var desiredSeparation = 50;
-	
-	//distance to search for cohesion and alignment
-	var searchDistance = 200.0;
-	
-	//distance to follow/repel from -- unimplimented
-	var followDis = 200.0;
+	var desiredSeparation = 50;		//distance to check for other boids to separate from
+	var searchDistance = 200.0;		//distance to search for cohesion and alignment
+	var followDis = 200.0;			//distance to follow/repel from -- unimplimented
 	
 	//weight of the three flocking influences
 	var seperationWeight =1;
-	var alignmentWeight =1;
+	var alignmentWeight =0.7;
 	var cohesionWeight =1;
 	
-	//radius of boids
-	var radius=10;
-	
-	//initialize flock
-	var flock =[];
+	var radius=10;					//radius of boids
+	var flock =[];					//initialize flock
 	
 	//create a boid object and fill the flock array
 	function init(){
@@ -49,30 +38,30 @@ window.addEventListener('load', function(){
 	
 	//update every frame
 	function update(){
-		//ctx.save() and ctx.restore() reset the transformations and rotations used to move objects on screen
-		ctx.save();
-		
-		//reset background color every frame
-		ctx.clearRect(0,0,height, width);	
+		ctx.save();	//ctx.save() and ctx.restore() reset the transformations and rotations used to move objects on screen
+		ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+        ctx.fillRect(0,0,width, height);		//reset background color every frame
 		
 		//for every boid:		
 		for(var i = 0; i < flock.length; i++){
 			ctx.save();
-			//call the flocking updates
-			flock[i].flocking(flock);
-			//call the main update
-			flock[i].updateBoid();
-			
+			flock[i].flocking(flock);	//call the flocking updates
+			flock[i].updateBoid();		//call the main update
 			//draw the boid with it's transformation and rotation
-			ctx.fillStyle = "green";
 			ctx.translate(flock[i].position.x,flock[i].position.y);
 			ctx.rotate(flock[i].velocity.heading());
-			ctx.fillRect(0,0,radius+5,radius);
+			circle(radius, 'green');
+			//ctx.fillRect(0,0,radius+5,radius);
 			ctx.restore();
 		}
 		ctx.restore();
 	}
-	
+	function circle(rad, color){
+		ctx.beginPath();
+		ctx.arc(0, 0, rad, 0, 2 * Math.PI, false);
+		ctx.fillStyle = color;
+		ctx.fill();
+	}
 	
 	//My vector handler
 	var vector = {
@@ -96,7 +85,7 @@ window.addEventListener('load', function(){
 		},
 		//multiplying by either a scalar or a vector
 		mult: function(_vector){
-			if(typeof "_vector" === "object"){
+			if(typeof _vector === "object"){
 				this.x*=_vector.x;
 				this.y*=_vector.y;		
 				return this;
@@ -107,7 +96,7 @@ window.addEventListener('load', function(){
 		},
 		//dividing by either a scalar or a vector
 		div: function(_vector){
-			if(typeof "_vector" === "object"){
+			if(typeof _vector === "object"){
 				this.x/=_vector.x;
 				this.y/=_vector.y;		
 				return this;
@@ -207,18 +196,10 @@ window.addEventListener('load', function(){
 		},
 		//update boid
 		updateBoid: function(){
-			//add acceleration to velocity
-			this.velocity.add(this.acceleration);
-			
-			//this.velocity.add(this.acceleration.mult(0.9)); 	//attempt to smooth jitteryness by lowering applied acceleration
-			//this.velocity.mult(0.9); 							//attempt to smooth jitteryness by lowering velocity
-			
-			//add velocity to position
-			this.position.add(this.velocity);
-			//zero out acceleration
-			this.acceleration.mult(0);
-			//screenwrap objects
-			screenWrap(this.position);
+			this.velocity.add(this.acceleration);	//add acceleration to velocity
+			this.position.add(this.velocity);		//add velocity to position
+			this.acceleration.mult(0);				//zero out acceleration
+			screenWrap(this.position);				//screenwrap objects
 		},
 		
 		//applying forces to boids object
@@ -237,14 +218,12 @@ window.addEventListener('load', function(){
 		seperate: function(boids){
 			var steer = Vector(0,0);
 			var count = 0;
-		    
-		 	for(var i = 0; i < boids.length; i++){
-				var d = dist(this.position, boids[i].position);
+            for(var i = 0; i < boids.length; i++){
+                var d = dist(this.position, boids[i].position);
 				if (d < desiredSeparation && d > 0)
 				{
 					var delta = Vector();
 					delta = this.position.subtract(boids[i].position);
-					//delta = subtract(this.position, boids[i].position);
 					delta.normalize();
 					delta.div(d);
 					steer.add(delta);
@@ -266,9 +245,8 @@ window.addEventListener('load', function(){
 		cohesion: function(boids){
 			var sum = Vector(0,0);
 			var count = 0;
-		    
-		 	for(var i = 0; i < boids.length; i++){
-				var d = dist(this.position, boids[i].position);
+            for(var i = 0; i < boids.length; i++){
+                var d = dist(this.position, boids[i].position);
 				if (d < searchDistance && d > 0)
 				{
 					sum.add(boids[i].position);
@@ -295,9 +273,8 @@ window.addEventListener('load', function(){
 		align: function(boids){
 			var sum = Vector(0,0);
 			var count = 0;
-		    
-		 	for(var i = 0; i < boids.length; i++){
-				var d = dist(this.position, boids[i].position);
+            for(var i = 0; i < boids.length; i++){
+                var d = dist(this.position, boids[i].position);
 				if (d < searchDistance && d > 0)
 				{
 					sum.add(boids[i].velocity);
