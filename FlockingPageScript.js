@@ -13,8 +13,8 @@ window.addEventListener('load', function(){
     var width = ctx.canvas.width;
     var height = ctx.canvas.height;
 	var numBoids = 300;				//number of boids objects
-	var maxSpeed = 3;				//limiting the speed
-	var maxSteeringForce = 0.03;
+	var maxSpeed = 10;				//limiting the speed
+	var maxSteeringForce = 0.7;
 	var desiredSeparation = 50;		//distance to check for other boids to separate from
 	var searchDistance = 200.0;		//distance to search for cohesion and alignment
 	var followDis = 200.0;			//distance to follow/repel from -- unimplimented
@@ -22,7 +22,7 @@ window.addEventListener('load', function(){
 	//weight of the three flocking influences
 	var seperationWeight =1;
 	var alignmentWeight =0.7;
-	var cohesionWeight =1;
+	var cohesionWeight =0.1;
 	
 	var radius=10;					//radius of boids
 	var flock =[];					//initialize flock
@@ -44,7 +44,7 @@ window.addEventListener('load', function(){
 		ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
         ctx.fillRect(0,0,width, height);		//reset background color every frame
 		
-		//for every boid:		
+		//for every boid:
 		for(var i = 0; i < flock.length; i++){
 			ctx.save();
 			flock[i].flocking(flock);	//call the flocking updates
